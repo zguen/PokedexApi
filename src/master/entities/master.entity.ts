@@ -1,4 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { Trainer } from "src/trainer/entities/trainer.entity";
+import { Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export class Master {
     @PrimaryGeneratedColumn()
@@ -16,4 +17,7 @@ export class Master {
     password: string;
     @Column({ nullable: false })
     admin: boolean;
+
+    @OneToMany(() => Trainer, (trainer) => trainer.master)
+    trainer: Trainer[];
 }
