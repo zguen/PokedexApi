@@ -18,6 +18,6 @@ export class Master {
     @Column({ nullable: false })
     admin: boolean;
 
-    @OneToMany(() => Trainer, (trainer) => trainer.master)
-    trainer: Trainer[];
+    // @OneToMany(() => Trainer, (trainer) => trainer.master)
+    // trainer: Trainer[];
 }

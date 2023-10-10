@@ -13,6 +13,7 @@ import { Trainer } from './trainer/entities/trainer.entity';
 import { Pokemon } from './pokemon/entities/pokemon.entity';
 import { Type } from './type/entities/type.entity';
 import { Generation } from './generation/entities/generation.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { Generation } from './generation/entities/generation.entity';
       entities: [Master, Trainer, Pokemon, Type,Generation],
       synchronize: false,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

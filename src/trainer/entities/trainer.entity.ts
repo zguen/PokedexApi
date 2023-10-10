@@ -12,12 +12,12 @@ export class Trainer {
     @Column({ nullable: false, type: 'int' })
     id_master: number;
 
-    @ManyToMany(() => Pokemon, (pokemon) => pokemon.trainer, { eager: true })
-    pokemon: Pokemon[];
+    // @ManyToMany(() => Pokemon, (pokemon) => pokemon.trainer, { eager: true })
+    // pokemon: Pokemon[];
 
-    @ManyToOne(() => Master, (master) => master.trainer, {
-        eager: true,
-    })
-    @JoinColumn({ name: 'id_master' })
-    master: Master;
+    // @ManyToOne(() => Master, (master) => master.trainer, {
+    //     eager: true,
+    // })
+    // @JoinColumn({ name: 'id_master' })
+    // master: Master;
 }

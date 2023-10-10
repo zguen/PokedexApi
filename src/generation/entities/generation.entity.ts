@@ -8,6 +8,6 @@ export class Generation {
   @Column({ nullable: false })
   wording: string;
 
-  @OneToMany(() => Pokemon, (pokemon) => pokemon.generation)
-  pokemon: Pokemon[];
+  // @OneToMany(() => Pokemon, (pokemon) => pokemon.generation)
+  // pokemon: Pokemon[];
 }
