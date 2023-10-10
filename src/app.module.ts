@@ -8,12 +8,12 @@ import { TypeModule } from './type/type.module';
 import { GenerationModule } from './generation/generation.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import { Master } from './master/entities/master.entity';
 import { Trainer } from './trainer/entities/trainer.entity';
 import { Pokemon } from './pokemon/entities/pokemon.entity';
 import { Type } from './type/entities/type.entity';
 import { Generation } from './generation/entities/generation.entity';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [

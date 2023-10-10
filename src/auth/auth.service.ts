@@ -18,10 +18,10 @@ export class AuthService {
     @InjectRepository(Master)
     private masterRepository: Repository<Master>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async register(createAuthDto: CreateAuthDto) {
-    const { lastName, firstName, nickName, email, password, admin } =
+    const { lastname, firstname, nickname, email, password, admin } =
       createAuthDto;
 
     // hashage du mot de passe
@@ -30,12 +30,12 @@ export class AuthService {
 
     //création entité master
     const master = this.masterRepository.create({
-      lastName,
-      firstName,
-      nickName,
+      lastname,
+      firstname,
+      nickname,
       email,
       password: hashedPassword,
-      admin: false,
+      admin,
     });
 
     try {
@@ -52,11 +52,15 @@ export class AuthService {
       }
     }
   }
+
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
-    const user = await this.masterRepository.findOneBy({ email });
+    const master = await this.masterRepository.findOneBy({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (
+      master &&
+      (await bcrypt.compare(password, master.password))
+    ) {
       const payload = { email };
       const accessToken = await this.jwtService.sign(payload);
       return { accessToken };

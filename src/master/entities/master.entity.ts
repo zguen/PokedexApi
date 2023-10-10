@@ -1,16 +1,17 @@
 import { Trainer } from "src/trainer/entities/trainer.entity";
-import { Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity()
 export class Master {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ nullable: false })
-    lastName: string;
+    lastname: string;
     @Column({ nullable: false })
-    firstName: string;
+    firstname: string;
     @Column()
-    nickName: string;
+    nickname: string;
     @Column({ nullable: false, unique: true })
     email: string;
     @Column({ nullable: false })
@@ -18,6 +19,6 @@ export class Master {
     @Column({ nullable: false })
     admin: boolean;
 
-    // @OneToMany(() => Trainer, (trainer) => trainer.master)
-    // trainer: Trainer[];
+    @OneToMany(() => Trainer, (trainer) => trainer.master)
+    trainer: Trainer[];
 }

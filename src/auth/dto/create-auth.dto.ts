@@ -5,16 +5,16 @@ export class CreateAuthDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    lastName: string;
+    lastname: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    firstName: string;
+    firstname: string;
 
     @ApiProperty()
     @IsString()
-    nickName: string;
+    nickname: string;
 
     @ApiProperty()
     @IsNotEmpty()

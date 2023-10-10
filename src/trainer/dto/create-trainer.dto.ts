@@ -5,12 +5,12 @@ export class CreateTrainerDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    firstName: string;
+    firstname: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    nickName: string;
+    nickname: string;
 
     @ApiProperty()
     @IsNotEmpty()

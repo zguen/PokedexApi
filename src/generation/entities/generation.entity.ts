@@ -1,6 +1,7 @@
 import { Pokemon } from 'src/pokemon/entities/pokemon.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Generation {
   @PrimaryGeneratedColumn()
   id: number;
@@ -8,6 +9,6 @@ export class Generation {
   @Column({ nullable: false })
   wording: string;
 
-  // @OneToMany(() => Pokemon, (pokemon) => pokemon.generation)
-  // pokemon: Pokemon[];
+  @OneToMany(() => Pokemon, (pokemon) => pokemon.generation)
+  pokemon: Pokemon[];
 }
