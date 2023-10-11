@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGenerationDto } from './dto/create-generation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Generation } from './entities/generation.entity';
@@ -11,15 +11,21 @@ export class GenerationService {
     @InjectRepository(Generation) private generationRepository: Repository<Generation>
   ) {}
 
-  create(createGenerationDto: CreateGenerationDto) {
-    return 'This action adds a new generation';
+  async create(createGenerationDto: CreateGenerationDto) {
+    const generation = this.generationRepository.create(createGenerationDto);
+    const result = this.generationRepository.save(generation);
+    return result;
   }
 
   findAll() {
     return this.generationRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} generation`;
+  async findOne(id: number) {
+    const found = await this.generationRepository.findOneBy({ id });
+    if (!found) {
+      throw new NotFoundException(`Pas de generation ${id}`);
+    }
+    return found;;
   }
 }

@@ -49,7 +49,7 @@ export class Pokemon {
     inverseJoinColumn: { name: 'id_type', referencedColumnName: 'id' },
     // { name: 'nom_colonne_table_produire', referencedColumnName: 'nom_colonne_table_saison' }
   })
-  type: Type[];
+  types: Type[];
 
   @ManyToMany(() => Trainer, (trainer) => trainer.pokemon)
   @JoinTable({

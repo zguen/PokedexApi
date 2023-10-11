@@ -12,6 +12,6 @@ export class Type {
   @Column({ nullable: false })
   picture: string;
 
-  @ManyToMany(() => Pokemon, (pokemon) => pokemon.type,{eager:false})
+  @ManyToMany(() => Pokemon, (pokemon) => pokemon.types,{eager:false})
   pokemons: Pokemon[];
 }

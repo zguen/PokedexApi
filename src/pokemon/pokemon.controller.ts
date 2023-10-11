@@ -18,7 +18,7 @@ import { Master } from 'src/master/entities/master.entity';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('pokemon')
-  @ApiTags('Pokemons Controller')
+@ApiTags('Pokemons Controller')
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
@@ -45,11 +45,13 @@ export class PokemonController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard())
   update(@Param('id') id: string, @Body() updatePokemonDto: UpdatePokemonDto) {
     return this.pokemonService.update(+id, updatePokemonDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard())
   remove(@Param('id') id: string) {
     return this.pokemonService.remove(+id);
   }
