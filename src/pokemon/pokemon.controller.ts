@@ -20,7 +20,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('pokemon')
 @ApiTags('Pokemons Controller')
 export class PokemonController {
-  constructor(private readonly pokemonService: PokemonService) {}
+  constructor(private readonly pokemonService: PokemonService) { }
 
   @Post()
   @UseGuards(AuthGuard())
@@ -46,13 +46,23 @@ export class PokemonController {
 
   @Patch(':id')
   @UseGuards(AuthGuard())
-  update(@Param('id') id: string, @Body() updatePokemonDto: UpdatePokemonDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePokemonDto: UpdatePokemonDto,
+    @GetUser() master: Master,
+  ) {
+    if (!master.admin) {
+      throw new UnauthorizedException(`Droits d'administrateur nécéssaires`);
+    }
     return this.pokemonService.update(+id, updatePokemonDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard())
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string, @GetUser() master: Master) {
+    if (!master.admin) {
+      throw new UnauthorizedException(`Droits d'administrateur nécéssaires`);
+    }
     return this.pokemonService.remove(+id);
   }
 }
