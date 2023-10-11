@@ -13,5 +13,5 @@ export class Type {
   picture: string;
 
   @ManyToMany(() => Pokemon, (pokemon) => pokemon.type,{eager:false})
-  pokemon: Pokemon[];
+  pokemons: Pokemon[];
 }

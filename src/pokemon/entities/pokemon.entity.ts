@@ -34,13 +34,13 @@ export class Pokemon {
   @Column({ nullable: false, type: 'int' })
   id_generation: number;
 
-  @ManyToOne(() => Generation, (generation) => generation.pokemon, {
+  @ManyToOne(() => Generation, (generation) => generation.pokemons, {
     eager: true,
   })
   @JoinColumn({ name: 'id_generation' })
   generation: Generation;
 
-  @ManyToMany(() => Type, (type) => type.pokemon, { eager: true })
+  @ManyToMany(() => Type, (type) => type.pokemons, { eager: true })
   @JoinTable({
     //nécessaire que sur une des deux tables
     name: 'define', // nom de la table d'association dans BDD

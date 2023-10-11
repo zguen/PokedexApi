@@ -12,8 +12,10 @@ export class PokemonService {
     @InjectRepository(Pokemon) private pokemonRepository: Repository<Pokemon>,
   ) { }
   
-  create(createPokemonDto: CreatePokemonDto) {
-    return 'This action adds a new pokemon';
+  async create(createPokemonDto: CreatePokemonDto) {
+    const pokemon = this.pokemonRepository.create(createPokemonDto);
+    const result = await this.pokemonRepository.save(pokemon);
+    return result;
   }
 
   findAll() {

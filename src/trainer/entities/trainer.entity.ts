@@ -16,9 +16,9 @@ export class Trainer {
     @ManyToMany(() => Pokemon, (pokemon) => pokemon.trainer, { eager: true })
     pokemon: Pokemon[];
 
-    @ManyToOne(() => Master, (master) => master.trainer, {
+    @ManyToOne(() => Master, (master) => master.trainers, {
         eager: true,
     })
     @JoinColumn({ name: 'id_master' })
-    master: Master;
+    masters: Master;
 }

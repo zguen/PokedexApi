@@ -9,7 +9,7 @@ export class CreatePokemonDto {
     @IsNotEmpty()
     @IsInt()
     @IsPositive()
-    pokedexId: number;
+    pokedexid: number;
 
     @ApiProperty()
     @IsNotEmpty()
