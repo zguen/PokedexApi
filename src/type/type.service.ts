@@ -10,23 +10,13 @@ export class TypeService {
   constructor(
     @InjectRepository(Type) private typeRepository: Repository<Type>,
   ) {}
-  create(createTypeDto: CreateTypeDto) {
-    return 'This action adds a new type';
+  async create(createTypeDto: CreateTypeDto) {
+    const type = this.typeRepository.create(createTypeDto);
+    const result = this.typeRepository.save(type);
+    return result;
   }
 
   findAll() {
     return this.typeRepository.find();
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} type`;
-  }
-
-  update(id: number, updateTypeDto: UpdateTypeDto) {
-    return `This action updates a #${id} type`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} type`;
   }
 }
