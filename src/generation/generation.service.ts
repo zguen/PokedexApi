@@ -6,9 +6,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class GenerationService {
-
   constructor(
-    @InjectRepository(Generation) private generationRepository: Repository<Generation>
+    @InjectRepository(Generation)
+    private generationRepository: Repository<Generation>,
   ) {}
 
   async create(createGenerationDto: CreateGenerationDto) {
@@ -26,6 +26,12 @@ export class GenerationService {
     if (!found) {
       throw new NotFoundException(`Pas de generation ${id}`);
     }
-    return found;;
+    return found;
+  }
+
+  async remove(id: number) {
+    const generation = await this.findOne(id);
+    const reponse = await this.generationRepository.remove(generation);
+    return reponse;
   }
 }

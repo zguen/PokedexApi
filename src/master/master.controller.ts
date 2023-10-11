@@ -1,30 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { MasterService } from './master.service';
-import { CreateMasterDto } from './dto/create-master.dto';
-import { UpdateMasterDto } from './dto/update-master.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { Master } from './entities/master.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('master')
+@ApiTags('Utilisateurs Controller')
 export class MasterController {
   constructor(private readonly masterService: MasterService) {}
 
-  @Post()
-  create(@Body() createMasterDto: CreateMasterDto) {
-    return this.masterService.create(createMasterDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.masterService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.masterService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMasterDto: UpdateMasterDto) {
-    return this.masterService.update(+id, updateMasterDto);
+  @Get() //pour que l'utilisateur puisse accéder à son profil
+  @UseGuards(AuthGuard())
+  findOne(@GetUser() master: Master) {
+    return this.masterService.findOne(master.id);
   }
 
   @Delete(':id')

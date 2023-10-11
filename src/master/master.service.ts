@@ -1,23 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMasterDto } from './dto/create-master.dto';
 import { UpdateMasterDto } from './dto/update-master.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Master } from './entities/master.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MasterService {
-  create(createMasterDto: CreateMasterDto) {
-    return 'This action adds a new master';
-  }
+  constructor(
+    @InjectRepository(Master)
+  private masterRepository: Repository < Master>)
+   { }
 
-  findAll() {
-    return `This action returns all master`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} master`;
-  }
-
-  update(id: number, updateMasterDto: UpdateMasterDto) {
-    return `This action updates a #${id} master`;
+  async findOne(id: number) {
+    const found = await this.masterRepository.findOneBy({ id });
+    if (!found) {
+      throw new NotFoundException(`Master with the id ${id} not found`);
+    }
+    return found;
   }
 
   remove(id: number) {

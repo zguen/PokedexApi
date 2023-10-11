@@ -31,4 +31,12 @@ export class GenerationController {
   findOne(@Param('id') id: string) {
     return this.generationService.findOne(+id);
   }
+  @Delete(':id')
+  @UseGuards(AuthGuard())
+  remove(@Param('id') id: string, @GetUser() master: Master) {
+    if (!master.admin) {
+      throw new UnauthorizedException(`Droits d'administrateur nécéssaires`);
+    }
+    return this.generationService.remove(+id);
+  }
 }
