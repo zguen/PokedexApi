@@ -32,7 +32,7 @@ export class TrainerController {
   }
 
   @Get()
-  findTrainerByIdMaster(@GetUser() master: Master): Promise <Trainer[]> {
+  findTrainerByIdMaster(@GetUser() master: Master): Promise<Trainer[]> {
     return this.trainerService.findTrainerByIdMaster(master.id);
   }
 
@@ -42,12 +42,16 @@ export class TrainerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTrainerDto: UpdateTrainerDto, @GetUser() master: Master) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTrainerDto: UpdateTrainerDto,
+    @GetUser() master: Master,
+  ) {
     return this.trainerService.update(+id, updateTrainerDto, master.id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @GetUser()master: Master) {
+  remove(@Param('id') id: string, @GetUser() master: Master) {
     return this.trainerService.remove(+id, master.id);
   }
 }
