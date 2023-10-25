@@ -19,6 +19,6 @@ export class Master {
     @Column({ nullable: false })
     admin: boolean;
 
-    @OneToMany(() => Trainer, (trainer) => trainer.masters)
+    @OneToMany(() => Trainer, (trainer) => trainer.masters, {eager:true})
     trainers: Trainer[];
 }
