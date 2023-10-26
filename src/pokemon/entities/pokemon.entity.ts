@@ -34,6 +34,9 @@ export class Pokemon {
   @Column({ nullable: false, type: 'int' })
   id_generation: number;
 
+  @Column()
+  description: string
+  
   @ManyToOne(() => Generation, (generation) => generation.pokemons, {
     eager: true,
   })
