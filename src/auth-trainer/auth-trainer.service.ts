@@ -1,15 +1,24 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateAuthTrainerDto } from './dto/create-auth-trainer.dto';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trainer } from 'src/trainer/entities/trainer.entity';
 import { Repository } from 'typeorm';
+import { LoginTrainerDto } from './dto/login-trainer.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthTrainerService {
+  constructor(
+    @InjectRepository(Trainer) private trainerRepository: Repository<Trainer>,
+    private jwtService: JwtService,
+  ) {}
 
-  constructor(@InjectRepository(Trainer) private trainerRepository: Repository<Trainer>) { }
-  
   async register(createAuthTrainerDto: CreateAuthTrainerDto) {
     const { nickname, firstname, id_master, password } = createAuthTrainerDto;
 
@@ -21,7 +30,7 @@ export class AuthTrainerService {
       nickname,
       firstname,
       id_master,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     try {
@@ -37,4 +46,16 @@ export class AuthTrainerService {
     }
   }
 
+  async login(loginTrainerDto: LoginTrainerDto) {
+    const { nickname, password } = loginTrainerDto;
+    const trainer = await this.trainerRepository.findOneBy({ nickname });
+
+    if (trainer && (await bcrypt.compare(password, trainer.password))) {
+      const payload = { nickname };
+      const accessToken = await this.jwtService.sign(payload);
+      return { accessToken };
+    } else {
+      throw new UnauthorizedException('Ces identifiants ne sont pas bons');
+    }
+  }
 }
