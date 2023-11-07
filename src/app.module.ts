@@ -14,6 +14,7 @@ import { Trainer } from './trainer/entities/trainer.entity';
 import { Pokemon } from './pokemon/entities/pokemon.entity';
 import { Type } from './type/entities/type.entity';
 import { Generation } from './generation/entities/generation.entity';
+import { AuthTrainerModule } from './auth-trainer/auth-trainer.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { Generation } from './generation/entities/generation.entity';
       synchronize: false,
     }),
     AuthModule,
+    AuthTrainerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
