@@ -1,22 +1,32 @@
 import { Master } from 'src/master/entities/master.entity';
 import { Pokemon } from 'src/pokemon/entities/pokemon.entity';
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Trainer {
-    @PrimaryGeneratedColumn()
-    id: number;
-    @Column({ nullable: false })
-    firstname: string;
-    @Column()
-    nickname: string;
-    @Column({ nullable: false, type: 'int' })
-    id_master: number;
+  @PrimaryGeneratedColumn()
+  id: number;
+  @Column({ nullable: false })
+  firstname: string;
+  @Column()
+  nickname: string;
+  @Column()
+  password: string;
 
-    @ManyToMany(() => Pokemon, (pokemon) => pokemon.trainer, { eager: true })
-    pokemon: Pokemon[];
+  @Column({ nullable: false, type: 'int' })
+  id_master: number;
 
-    @ManyToOne(() => Master, (master) => master.trainers)
-    @JoinColumn({ name: 'id_master' })
-    masters: Master;
+  @ManyToMany(() => Pokemon, (pokemon) => pokemon.trainer, { eager: true })
+  pokemon: Pokemon[];
+
+  @ManyToOne(() => Master, (master) => master.trainers)
+  @JoinColumn({ name: 'id_master' })
+  masters: Master;
 }
