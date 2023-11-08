@@ -1,6 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateMasterDto } from './dto/create-master.dto';
-import { UpdateMasterDto } from './dto/update-master.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Master } from './entities/master.entity';
 import { Repository } from 'typeorm';

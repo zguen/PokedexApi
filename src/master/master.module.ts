@@ -4,11 +4,12 @@ import { MasterController } from './master.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { Master } from './entities/master.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     TypeOrmModule.forFeature([Master]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [MasterController],
   providers: [MasterService],

@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Trainer } from 'src/trainer/entities/trainer.entity';
 
-export const GetUser = createParamDecorator(
+export const GetTrainer = createParamDecorator(
   (_data, ctx: ExecutionContext): Trainer => {
     const req = ctx.switchToHttp().getRequest();
     return req.user; // NE PAS RENOMMER

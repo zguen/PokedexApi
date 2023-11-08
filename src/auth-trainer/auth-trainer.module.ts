@@ -5,7 +5,6 @@ import { Trainer } from 'src/trainer/entities/trainer.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtTrainerStrategy } from './jwtTrainer-strategy';
 
 @Module({
   imports: [
@@ -17,7 +16,7 @@ import { JwtTrainerStrategy } from './jwtTrainer-strategy';
     }),
   ],
   controllers: [AuthTrainerController],
-  providers: [AuthTrainerService, JwtTrainerStrategy],
-  exports: [JwtTrainerStrategy, PassportModule],
+  providers: [AuthTrainerService],
+  exports: [PassportModule],
 })
 export class AuthTrainerModule {}
