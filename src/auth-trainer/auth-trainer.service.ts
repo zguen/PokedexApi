@@ -51,9 +51,8 @@ export class AuthTrainerService {
     const trainer = await this.trainerRepository.findOneBy({ nickname });
 
     if (trainer && (await bcrypt.compare(password, trainer.password))) {
-      const payload = { nickname };
-      const accessToken = await this.jwtService.sign(payload);
-      return { accessToken };
+      // Retourne directement les détails du dresseur dans la réponse
+      return { trainer };
     } else {
       throw new UnauthorizedException('Ces identifiants ne sont pas bons');
     }
