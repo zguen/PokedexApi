@@ -13,7 +13,7 @@ import {
 
 @Entity()
 export class Pokemon {
-  @PrimaryColumn({nullable: false})
+  @PrimaryColumn({ nullable: false })
   pokedexid: number;
 
   @Column({ nullable: false })
@@ -35,8 +35,8 @@ export class Pokemon {
   id_generation: number;
 
   @Column()
-  description: string
-  
+  description: string;
+
   @ManyToOne(() => Generation, (generation) => generation.pokemons, {
     eager: true,
   })

@@ -15,6 +15,7 @@ import { Pokemon } from './pokemon/entities/pokemon.entity';
 import { Type } from './type/entities/type.entity';
 import { Generation } from './generation/entities/generation.entity';
 import { AuthTrainerModule } from './auth-trainer/auth-trainer.module';
+import { CaptureModule } from './capture/capture.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthTrainerModule } from './auth-trainer/auth-trainer.module';
     }),
     AuthModule,
     AuthTrainerModule,
+    CaptureModule,
   ],
   controllers: [AppController],
   providers: [AppService],

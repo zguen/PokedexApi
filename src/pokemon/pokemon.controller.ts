@@ -16,11 +16,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Master } from 'src/master/entities/master.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { CaptureDto } from 'src/capture/dto/capture.dto';
 
 @Controller('pokemon')
 @ApiTags('Pokemons Controller')
 export class PokemonController {
-  constructor(private readonly pokemonService: PokemonService) { }
+  constructor(private readonly pokemonService: PokemonService) {}
 
   @Post()
   @UseGuards(AuthGuard())
@@ -40,8 +41,8 @@ export class PokemonController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pokemonService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.pokemonService.findOne(id);
   }
 
   @Patch(':id')
@@ -64,5 +65,11 @@ export class PokemonController {
       throw new UnauthorizedException(`Droits d'administrateur nécéssaires`);
     }
     return this.pokemonService.remove(+id);
+  }
+
+  @Post('/capture')
+  capturePokemon(@Body() captureDto: CaptureDto): Promise<void> {
+    console.log('Capture Pokemon endpoint reached');
+    return this.pokemonService.capturePokemon(captureDto);
   }
 }
