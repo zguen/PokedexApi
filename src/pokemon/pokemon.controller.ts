@@ -69,7 +69,6 @@ export class PokemonController {
 
   @Post('/capture')
   capturePokemon(@Body() captureDto: CaptureDto): Promise<void> {
-    console.log('Capture Pokemon endpoint reached');
     return this.pokemonService.capturePokemon(captureDto);
   }
 }
