@@ -13,10 +13,6 @@ export class CreateAuthDto {
     firstname: string;
 
     @ApiProperty()
-    @IsString()
-    nickname: string;
-
-    @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
     @Matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)

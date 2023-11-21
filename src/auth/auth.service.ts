@@ -21,7 +21,7 @@ export class AuthService {
   ) { }
 
   async register(createAuthDto: CreateAuthDto) {
-    const { lastname, firstname, nickname, email, password, admin } =
+    const { lastname, firstname, email, password, admin } =
       createAuthDto;
 
     // hashage du mot de passe
@@ -29,13 +29,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     //création entité master
-    const master = this.masterRepository.create({
-      lastname,
-      firstname,
-      nickname,
-      email,
-      password: hashedPassword,
-      admin,
+    const master = this.masterRepository.create({lastname, firstname, email, password: hashedPassword,admin,
     });
 
     try {

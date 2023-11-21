@@ -10,8 +10,6 @@ export class Master {
     lastname: string;
     @Column({ nullable: false })
     firstname: string;
-    @Column()
-    nickname: string;
     @Column({ nullable: false, unique: true })
     email: string;
     @Column({ nullable: false })
