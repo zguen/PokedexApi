@@ -104,4 +104,16 @@ export class PokemonService {
       throw new NotFoundException('Pokemon or Trainer not found');
     }
   }
+  async getPokemonsByTrainer(trainerId: number): Promise<Pokemon[]> {
+    const trainer = await this.trainerRepository.findOne({
+      where: { id: trainerId },
+      relations: ['pokemon'],
+    });
+
+    if (trainer) {
+      return trainer.pokemon;
+    } else {
+      throw new NotFoundException(`Trainer with id ${trainerId} not found`);
+    }
+  }
 }

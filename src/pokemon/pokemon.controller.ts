@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
@@ -43,6 +44,21 @@ export class PokemonController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.pokemonService.findOne(id);
+  }
+
+  @Get('by-trainer/:trainerId')
+  async getPokemonsByTrainer(@Param('trainerId') trainerId: number) {
+    try {
+      const pokemons =
+        await this.pokemonService.getPokemonsByTrainer(trainerId);
+      return pokemons;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else {
+        throw error;
+      }
+    }
   }
 
   @Patch(':id')
