@@ -84,7 +84,6 @@ export class PokemonController {
   }
 
   @Post('/capture')
-  @UseGuards(AuthGuard())
   capturePokemon(@Body() captureDto: CaptureDto): Promise<void> {
     return this.pokemonService.capturePokemon(captureDto);
   }

@@ -82,17 +82,17 @@ export class PokemonService {
     });
 
     if (pokemon && trainer) {
-      // Vérifiez si le Pokémon n'est pas déjà capturé par le dresseur
+      // Vérifie si le Pokémon n'est pas déjà capturé par ce dresseur
       const isCaptured = trainer.pokemon.some(
         (capturedPokemon) => capturedPokemon.pokedexid === id_pokemon,
       );
 
       if (!isCaptured) {
-        // Ajoutez le Pokémon à la liste du dresseur avec les détails supplémentaires
+        // Ajoute le Pokémon à la liste du dresseur
         trainer.pokemon.push(pokemon);
         pokemon.trainer.push(trainer);
 
-        // Mettez à jour la base de données
+        // Mis à jour la base de données
         await this.trainerRepository.save(trainer);
         await this.pokemonRepository.save(pokemon);
       } else {
