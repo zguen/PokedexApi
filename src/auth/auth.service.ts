@@ -12,7 +12,6 @@ import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { MailerSenderService } from 'src/mailer-sender/mailer-sender.service';
-import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -20,11 +19,11 @@ export class AuthService {
     @InjectRepository(Master)
     private masterRepository: Repository<Master>,
     private jwtService: JwtService,
-    private mailerSenderService: MailerSenderService
-  ) { }
+    private mailerSenderService: MailerSenderService,
+  ) {}
 
   async register(createAuthDto: CreateAuthDto) {
-    const { lastname, firstname, email, password, admin } =
+    const { lastname, firstname, email, password, admin, confirmToken } =
       createAuthDto;
 
     // hashage du mot de passe
@@ -32,7 +31,13 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     //création entité master
-    const master = this.masterRepository.create({lastname, firstname, email, password: hashedPassword,admin,
+    const master = this.masterRepository.create({
+      lastname,
+      firstname,
+      email,
+      password: hashedPassword,
+      admin,
+      confirmToken,
     });
 
     try {
@@ -44,12 +49,18 @@ export class AuthService {
         { expiresIn: '2h' },
       );
 
+      console.log(typeof confirmToken);
+
+      // if (confirmToken) {
+      //   createdMaster.confirmToken = confirmToken;
+      //   await this.masterRepository.save(createdMaster);
+      // }
+
       const confirmationLink = `URL_de_confirmation?token=${confirmToken}`;
       await this.mailerSenderService.sendConfirmationEmail(
         createdMaster.email,
         confirmationLink,
       );
-
 
       delete createdMaster.password;
       return createdMaster;
@@ -67,10 +78,7 @@ export class AuthService {
     const { email, password } = loginDto;
     const master = await this.masterRepository.findOneBy({ email });
 
-    if (
-      master &&
-      (await bcrypt.compare(password, master.password))
-    ) {
+    if (master && (await bcrypt.compare(password, master.password))) {
       const payload = { email };
       const accessToken = await this.jwtService.sign(payload);
       return { accessToken };
