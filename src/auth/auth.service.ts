@@ -11,6 +11,8 @@ import { Master } from 'src/master/entities/master.entity';
 import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { MailerSenderService } from 'src/mailer-sender/mailer-sender.service';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +20,7 @@ export class AuthService {
     @InjectRepository(Master)
     private masterRepository: Repository<Master>,
     private jwtService: JwtService,
+    private mailerSenderService: MailerSenderService
   ) { }
 
   async register(createAuthDto: CreateAuthDto) {
@@ -35,6 +38,19 @@ export class AuthService {
     try {
       //enregistrement entité master
       const createdMaster = await this.masterRepository.save(master);
+
+      const confirmToken = this.jwtService.sign(
+        { userId: createdMaster.id },
+        { expiresIn: '2h' },
+      );
+
+      const confirmationLink = `URL_de_confirmation?token=${confirmToken}`;
+      await this.mailerSenderService.sendConfirmationEmail(
+        createdMaster.email,
+        confirmationLink,
+      );
+
+
       delete createdMaster.password;
       return createdMaster;
     } catch (error) {

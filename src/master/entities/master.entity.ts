@@ -3,20 +3,22 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Master {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ nullable: false })
-    lastname: string;
-    @Column({ nullable: false })
-    firstname: string;
-    @Column({ nullable: false, unique: true })
-    email: string;
-    @Column({ nullable: false })
-    password: string;
-    @Column({ nullable: false })
-    admin: boolean;
+  @Column({ nullable: false })
+  lastname: string;
+  @Column({ nullable: false })
+  firstname: string;
+  @Column({ nullable: false, unique: true })
+  email: string;
+  @Column({ nullable: false })
+  password: string;
+  @Column({ nullable: false })
+  admin: boolean;
+  @Column({ nullable: true })
+  confirmToken: string;
 
-    @OneToMany(() => Trainer, (trainer) => trainer.masters, {eager:true})
-    trainers: Trainer[];
+  @OneToMany(() => Trainer, (trainer) => trainer.masters, { eager: true })
+  trainers: Trainer[];
 }
