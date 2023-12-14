@@ -23,8 +23,7 @@ export class AuthService {
   ) {}
 
   async register(createAuthDto: CreateAuthDto) {
-    const { lastname, firstname, email, password, admin, confirmToken } =
-      createAuthDto;
+    const { lastname, firstname, email, password, admin } = createAuthDto;
 
     // hashage du mot de passe
     const salt = await bcrypt.genSalt();
@@ -37,7 +36,6 @@ export class AuthService {
       email,
       password: hashedPassword,
       admin,
-      confirmToken,
     });
 
     try {
@@ -48,15 +46,15 @@ export class AuthService {
         { userId: createdMaster.id },
         { expiresIn: '2h' },
       );
-
       console.log(typeof confirmToken);
 
-      // if (confirmToken) {
-      //   createdMaster.confirmToken = confirmToken;
-      //   await this.masterRepository.save(createdMaster);
-      // }
+      master.confirmtoken = confirmToken;
 
-      const confirmationLink = `URL_de_confirmation?token=${confirmToken}`;
+      createdMaster.confirmtoken = confirmToken;
+      await this.masterRepository.save(createdMaster);
+
+      const confirmationLink = `https://pokedexjunior.fr/auth/confirm-email?token=${confirmToken}`;
+
       await this.mailerSenderService.sendConfirmationEmail(
         createdMaster.email,
         confirmationLink,
@@ -65,13 +63,16 @@ export class AuthService {
       delete createdMaster.password;
       return createdMaster;
     } catch (error) {
-      //gestion des erreurs
+      // Gestion des erreurs
+      console.error('Error during registration:', error);
+
       if (error.code === '23505') {
         throw new ConflictException('Cet email est déjà utilisé');
       } else {
         throw new InternalServerErrorException();
       }
     }
+
   }
 
   async login(loginDto: LoginDto) {

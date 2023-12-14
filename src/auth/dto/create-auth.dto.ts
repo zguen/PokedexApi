@@ -6,6 +6,8 @@ import {
   IsOptional,
   IsString,
   Matches,
+  isBoolean,
+  isNotEmpty,
 } from 'class-validator';
 
 export class CreateAuthDto {
@@ -35,7 +37,7 @@ export class CreateAuthDto {
   @IsBoolean()
   admin: boolean;
 
-  @IsOptional()
-  @ApiProperty()
-  confirmToken: string;
+  //   @IsOptional()
+  //   @ApiProperty()
+  //   confirmToken: string;
 }

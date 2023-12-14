@@ -1,5 +1,5 @@
-import { Trainer } from "src/trainer/entities/trainer.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Trainer } from 'src/trainer/entities/trainer.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Master {
@@ -17,7 +17,9 @@ export class Master {
   @Column({ nullable: false })
   admin: boolean;
   @Column({ nullable: true })
-  confirmToken: string;
+  confirmtoken: string;
+  @Column({ default: false })
+  isverified: boolean;
 
   @OneToMany(() => Trainer, (trainer) => trainer.masters, { eager: true })
   trainers: Trainer[];
