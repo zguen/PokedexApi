@@ -13,7 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
+  @Post('/register')
   create(@Body() createAuthDto: CreateAuthDto) {
     
     
