@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -46,7 +47,6 @@ export class AuthService {
         { userId: createdMaster.id },
         { expiresIn: '2h' },
       );
-      console.log(typeof confirmToken);
 
       master.confirmtoken = confirmToken;
 
@@ -72,7 +72,6 @@ export class AuthService {
         throw new InternalServerErrorException();
       }
     }
-
   }
 
   async login(loginDto: LoginDto) {
@@ -87,6 +86,23 @@ export class AuthService {
       throw new UnauthorizedException(
         'Ces identifiants ne sont pas bons, déso...',
       );
+    }
+  }
+
+  async confirmEmail(confirmtoken: string): Promise<void> {
+   
+    const user = await this.masterRepository.findOneBy({ confirmtoken });
+
+    // Vérification du token
+    if (user) {
+      user.isverified = true;
+
+      user.confirmtoken = null;
+
+      await this.masterRepository.save(user);
+    } else {
+      // Token invalide ou jeton expiré
+      throw new BadRequestException('Token de confirmation invalide');
     }
   }
 }
