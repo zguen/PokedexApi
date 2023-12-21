@@ -28,7 +28,6 @@ export class AuthTrainerService {
 
     const trainer = this.trainerRepository.create({
       nickname,
-      firstname,
       id_master,
       password: hashedPassword,
     });
@@ -51,7 +50,6 @@ export class AuthTrainerService {
     const trainer = await this.trainerRepository.findOneBy({ nickname });
 
     if (trainer && (await bcrypt.compare(password, trainer.password))) {
-      // Retourne directement les détails du dresseur dans la réponse
       return { trainer };
     } else {
       throw new UnauthorizedException('Ces identifiants ne sont pas bons');
