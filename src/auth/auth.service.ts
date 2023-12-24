@@ -43,17 +43,17 @@ export class AuthService {
       //enregistrement entité master
       const createdMaster = await this.masterRepository.save(master);
 
-      const confirmToken = this.jwtService.sign(
+      const confirmtoken = this.jwtService.sign(
         { userId: createdMaster.id },
         { expiresIn: '2h' },
       );
 
-      master.confirmtoken = confirmToken;
+      master.confirmtoken = confirmtoken;
 
-      createdMaster.confirmtoken = confirmToken;
+      createdMaster.confirmtoken = confirmtoken;
       await this.masterRepository.save(createdMaster);
 
-      const confirmationLink = `https://pokedexjunior.fr/auth/confirm-email?token=${confirmToken}`;
+      const confirmationLink = `https://api.pokedexjunior.fr/api/auth/confirm?token=${confirmtoken}`;
 
       await this.mailerSenderService.sendConfirmationEmail(
         createdMaster.email,
@@ -91,15 +91,15 @@ export class AuthService {
 
   async confirmEmail(confirmtoken: string): Promise<void> {
    
-    const user = await this.masterRepository.findOneBy({ confirmtoken });
+    const master = await this.masterRepository.findOneBy({ confirmtoken });
 
     // Vérification du token
-    if (user) {
-      user.isverified = true;
+    if (master) {
+      master.isverified = true;
 
-      user.confirmtoken = null;
+      master.confirmtoken = null;
 
-      await this.masterRepository.save(user);
+      await this.masterRepository.save(master);
     } else {
       // Token invalide ou jeton expiré
       throw new BadRequestException('Token de confirmation invalide');

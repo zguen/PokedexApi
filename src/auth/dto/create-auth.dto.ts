@@ -36,8 +36,4 @@ export class CreateAuthDto {
   @IsNotEmpty()
   @IsBoolean()
   admin: boolean;
-
-  //   @IsOptional()
-  //   @ApiProperty()
-  //   confirmToken: string;
 }
