@@ -13,7 +13,6 @@ import {
 export class Trainer {
   @PrimaryGeneratedColumn()
   id: number;
-
   @Column()
   nickname: string;
   @Column()

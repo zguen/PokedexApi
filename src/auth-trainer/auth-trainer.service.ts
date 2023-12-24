@@ -20,7 +20,7 @@ export class AuthTrainerService {
   ) {}
 
   async register(createAuthTrainerDto: CreateAuthTrainerDto) {
-    const { nickname, firstname, id_master, password } = createAuthTrainerDto;
+    const { nickname, id_master, password } = createAuthTrainerDto;
 
     // hashage du mot de passe
     const salt = await bcrypt.genSalt();

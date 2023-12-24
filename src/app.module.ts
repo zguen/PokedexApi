@@ -16,6 +16,8 @@ import { Type } from './type/entities/type.entity';
 import { Generation } from './generation/entities/generation.entity';
 import { AuthTrainerModule } from './auth-trainer/auth-trainer.module';
 import { CaptureModule } from './capture/capture.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailerSenderService } from './mailer-sender/mailer-sender.service';
 
 @Module({
   imports: [
@@ -32,14 +34,28 @@ import { CaptureModule } from './capture/capture.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Master, Trainer, Pokemon, Type,Generation],
+      entities: [Master, Trainer, Pokemon, Type, Generation],
       synchronize: false,
     }),
     AuthModule,
     AuthTrainerModule,
     CaptureModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        port: parseInt(process.env.EMAIL_PORT, 10),
+        secure: process.env.EMAIL_SECURE === 'true',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+      defaults: {
+        from: process.env.EMAIL_FROM,
+      },
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailerSenderService],
 })
 export class AppModule {}
