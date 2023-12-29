@@ -6,7 +6,7 @@ import { Master } from './entities/master.entity';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('master')
-@ApiTags('Utilisateurs Controller')
+@ApiTags('Master Controller')
 export class MasterController {
   constructor(private readonly masterService: MasterService) {}
 

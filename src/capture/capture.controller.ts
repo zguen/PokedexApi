@@ -9,8 +9,10 @@ import {
 import { CaptureService } from './capture.service';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateCaptureDto } from './dto/update-capture.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('capture')
+@ApiTags('Capture Controller')
 export class CaptureController {
   constructor(private readonly captureService: CaptureService) {}
 

@@ -4,9 +4,11 @@ import { CreateGenerationDto } from './dto/create-generation.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Master } from 'src/master/entities/master.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 
 @Controller('generation')
+  @ApiTags('Generation Controller')
 export class GenerationController {
   constructor(private readonly generationService: GenerationService) {}
 
