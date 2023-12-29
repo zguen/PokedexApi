@@ -17,7 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { Master } from 'src/master/entities/master.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { CaptureDto } from 'src/capture/dto/capture.dto';
+import { CreateCaptureDto } from 'src/capture/dto/create-capture.dto';
 
 @Controller('pokemon')
 @ApiTags('Pokemons Controller')
@@ -84,7 +84,7 @@ export class PokemonController {
   }
 
   @Post('/capture')
-  capturePokemon(@Body() captureDto: CaptureDto): Promise<void> {
-    return this.pokemonService.capturePokemon(captureDto);
+  capturePokemon(@Body() createCaptureDto: CreateCaptureDto): Promise<void> {
+    return this.pokemonService.capturePokemon(createCaptureDto);
   }
 }

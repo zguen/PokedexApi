@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MasterService } from './master.service';
 import { MasterController } from './master.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PassportModule } from '@nestjs/passport';
 import { Master } from './entities/master.entity';
 import { AuthModule } from 'src/auth/auth.module';
 

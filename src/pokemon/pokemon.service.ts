@@ -9,7 +9,7 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pokemon } from './entities/pokemon.entity';
 import { Repository } from 'typeorm';
-import { CaptureDto } from 'src/capture/dto/capture.dto';
+import { CreateCaptureDto } from 'src/capture/dto/create-capture.dto';
 import { Trainer } from 'src/trainer/entities/trainer.entity';
 
 @Injectable()
@@ -68,8 +68,8 @@ export class PokemonService {
     return reponse;
   }
 
-  async capturePokemon(captureDto: CaptureDto): Promise<void> {
-    const { id_pokemon, id_trainer, nickname, game } = captureDto;
+  async capturePokemon(captureDto: CreateCaptureDto): Promise<void> {
+    const { id_pokemon, id_trainer, nickname, game_id } = captureDto;
 
     const pokemon = await this.pokemonRepository.findOne({
       where: { pokedexid: id_pokemon },

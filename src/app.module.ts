@@ -18,6 +18,9 @@ import { AuthTrainerModule } from './auth-trainer/auth-trainer.module';
 import { CaptureModule } from './capture/capture.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerSenderService } from './mailer-sender/mailer-sender.service';
+import { GameModule } from './game/game.module';
+import { Capture } from './capture/entities/capture.entity';
+import { Game } from './game/entities/game.entity';
 
 @Module({
   imports: [
@@ -34,7 +37,7 @@ import { MailerSenderService } from './mailer-sender/mailer-sender.service';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Master, Trainer, Pokemon, Type, Generation],
+      entities: [Master, Trainer, Pokemon, Type, Generation, Game, Capture],
       synchronize: false,
     }),
     AuthModule,
@@ -54,6 +57,7 @@ import { MailerSenderService } from './mailer-sender/mailer-sender.service';
         from: process.env.EMAIL_FROM,
       },
     }),
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailerSenderService],

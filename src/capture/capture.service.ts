@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { CaptureDto } from './dto/capture.dto';
-
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Capture } from './entities/capture.entity';
+import { UpdateCaptureDto } from './dto/update-capture.dto';
 
 @Injectable()
 export class CaptureService {
-  create(createCaptureDto: CaptureDto) {
-    return 'This action adds a new capture';
-  }
+  constructor(
+    @InjectRepository(Capture)
+    private readonly captureRepository: Repository<Capture>,
+  ) {}
 
-  findAll() {
-    return `This action returns all capture`;
-  }
+  async updateCaptureInfo(
+    trainerId: number,
+    pokemonId: number,
+    updateCaptureDto : UpdateCaptureDto
+  ): Promise<Capture> {
 
-  findOne(id: number) {
-    return `This action returns a #${id} capture`;
-  }
+     let Capture = await this.captureRepository.findOne({
+      where: { id_trainer: trainerId, id_pokemon: pokemonId },
+    });
 
-  update(id: number, updateCaptureDto: CaptureDto) {
-    return `This action updates a #${id} capture`;
-  }
+    if (!Capture) {
+      throw new NotFoundException('Capture not found');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} capture`;
+    // Mettre à jour les informations de capture
+    if (updateCaptureDto.nickname) {
+      Capture.nickname = updateCaptureDto.nickname;
+    }
+
+    if (updateCaptureDto.game_id) {
+      Capture.game_id = updateCaptureDto.game_id;
+    }
+
+    // Sauvegarder les modifications dans la base de données
+    await this.captureRepository.save(Capture);
+
+    return Capture;
   }
 }

@@ -47,7 +47,7 @@ export class CreatePokemonDto {
   @ApiProperty()
   @ArrayNotEmpty()
   @IsArray()
-  @ValidateNested({ each: true }) // Valide chaque élément du tableau
+  @ValidateNested({ each: true })
   @Type(() => TypeDto) //
   types: TypeEntity[];
 }

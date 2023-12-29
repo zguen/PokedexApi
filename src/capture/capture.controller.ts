@@ -1,30 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Param,
+  Body,
+  Patch,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import { CaptureService } from './capture.service';
-import { CaptureDto } from './dto/capture.dto';
-
+import { AuthGuard } from '@nestjs/passport';
+import { UpdateCaptureDto } from './dto/update-capture.dto';
 
 @Controller('capture')
 export class CaptureController {
   constructor(private readonly captureService: CaptureService) {}
 
-  @Post()
-  create(@Body() createCaptureDto: CaptureDto) {
-    return this.captureService.create(createCaptureDto);
-  }
+  @Patch(':trainerId/:pokemonId')
+  @UseGuards(AuthGuard())
+  async updateCapture(
+    @Param('trainerId') trainerId: number,
+    @Param('pokemonId') pokemonId: number,
+    @Body() updateCaptureDto: UpdateCaptureDto,
+  ) {
+    try {
+      const updatedCapture = await this.captureService.updateCaptureInfo(
+        trainerId,
+        pokemonId,
+        updateCaptureDto
+      );
 
-  @Get()
-  findAll() {
-    return this.captureService.findAll();
-  }
+      return {
+        message: 'Capture updated successfully',
+        capture: updatedCapture,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return {
+          message: 'Capture not found',
+        };
+      }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.captureService.findOne(+id);
-  }
-
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.captureService.remove(+id);
+      return {
+        message: 'Error updating capture',
+        error: error.message,
+      };
+    }
   }
 }
