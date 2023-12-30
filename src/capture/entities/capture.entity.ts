@@ -9,9 +9,6 @@ export class Capture {
   @PrimaryColumn()
   id_pokemon: number;
 
-  @Column({ nullable: true })
-  nickname: string;
-
   @Column({ nullable: true, type: 'int' })
   game_id: number;
 

@@ -18,7 +18,7 @@ export class GameService {
   async findOne(id: number) {
     const found = await this.gameRepository.findOneBy({ id });
     if (!found) {
-      throw new NotFoundException(`Pas de generation ${id}`);
+      throw new NotFoundException(`Pas de jeu ${id}`);
     }
     return found;
   }

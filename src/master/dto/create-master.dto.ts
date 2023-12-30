@@ -13,10 +13,6 @@ export class CreateMasterDto {
     firstName: string;
 
     @ApiProperty()
-    @IsString()
-    nickName: string;
-
-    @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
     @Matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)

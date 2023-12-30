@@ -48,6 +48,6 @@ export class CreatePokemonDto {
   @ArrayNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => TypeDto) //
+  @Type(() => TypeDto)
   types: TypeEntity[];
 }

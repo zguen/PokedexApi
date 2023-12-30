@@ -1,5 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsPositive, IsString, isPositive } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class CreateCaptureDto {
   @ApiProperty()
@@ -14,12 +20,9 @@ export class CreateCaptureDto {
   @IsPositive()
   id_pokemon: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: false }) 
+  @IsOptional() 
   @IsInt()
   @IsPositive()
   game_id?: number;
-
-  @ApiProperty()
-  @IsString()
-  nickname?: string;
 }

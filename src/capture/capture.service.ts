@@ -25,11 +25,6 @@ export class CaptureService {
       throw new NotFoundException('Capture not found');
     }
 
-    // Mettre à jour les informations de capture
-    if (updateCaptureDto.nickname) {
-      Capture.nickname = updateCaptureDto.nickname;
-    }
-
     if (updateCaptureDto.game_id) {
       Capture.game_id = updateCaptureDto.game_id;
     }
