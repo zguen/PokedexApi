@@ -5,6 +5,7 @@ import {
   Patch,
   NotFoundException,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import { CaptureService } from './capture.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,7 +28,7 @@ export class CaptureController {
       const updatedCapture = await this.captureService.updateCaptureInfo(
         trainerId,
         pokemonId,
-        updateCaptureDto
+        updateCaptureDto,
       );
 
       return {
@@ -43,6 +44,28 @@ export class CaptureController {
 
       return {
         message: 'Error updating capture',
+        error: error.message,
+      };
+    }
+  }
+
+  @Get('is-captured/:trainerId/:pokemonId')
+  async isPokemonCaptured(
+    @Param('trainerId') trainerId: number,
+    @Param('pokemonId') pokemonId: number,
+  ) {
+    try {
+      const captured = await this.captureService.isPokemonCaptured(
+        trainerId,
+        pokemonId,
+      );
+
+      return {
+        captured,
+      };
+    } catch (error) {
+      return {
+        message: 'Error checking capture status',
         error: error.message,
       };
     }

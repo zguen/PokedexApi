@@ -14,24 +14,30 @@ export class CaptureService {
   async updateCaptureInfo(
     trainerId: number,
     pokemonId: number,
-    updateCaptureDto : UpdateCaptureDto
+    updateCaptureDto: UpdateCaptureDto,
   ): Promise<Capture> {
-
-     let Capture = await this.captureRepository.findOne({
+    let Capture = await this.captureRepository.findOne({
       where: { id_trainer: trainerId, id_pokemon: pokemonId },
     });
-
     if (!Capture) {
       throw new NotFoundException('Capture not found');
     }
-
     if (updateCaptureDto.game_id) {
       Capture.game_id = updateCaptureDto.game_id;
     }
-
     // Sauvegarder les modifications dans la base de données
     await this.captureRepository.save(Capture);
-
     return Capture;
+  }
+
+  async isPokemonCaptured(
+    trainerId: number,
+    pokemonId: number,
+  ): Promise<boolean> {
+    const capture = await this.captureRepository.findOne({
+      where: { id_trainer: trainerId, id_pokemon: pokemonId },
+    });
+
+    return !!capture; // Retourne true si la capture existe, sinon false
   }
 }
