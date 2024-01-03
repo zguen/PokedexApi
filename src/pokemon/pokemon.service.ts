@@ -69,7 +69,7 @@ export class PokemonService {
   }
 
   async capturePokemon(captureDto: CreateCaptureDto): Promise<void> {
-    const { id_pokemon, id_trainer, game_id } = captureDto;
+    const { id_pokemon, id_trainer} = captureDto;
 
     const pokemon = await this.pokemonRepository.findOne({
       where: { pokedexid: id_pokemon },

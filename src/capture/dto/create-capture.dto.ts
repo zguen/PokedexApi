@@ -1,11 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsInt,
   IsNotEmpty,
-  IsOptional,
   IsPositive,
-  IsString,
+  ValidateNested,
 } from 'class-validator';
+import { GameDto } from 'src/game/dto/game.dto';
+import { Game } from 'src/game/entities/game.entity';
 
 export class CreateCaptureDto {
   @ApiProperty()
@@ -20,9 +23,9 @@ export class CreateCaptureDto {
   @IsPositive()
   id_pokemon: number;
 
-  @ApiProperty({ required: false }) 
-  @IsOptional() 
-  @IsInt()
-  @IsPositive()
-  game_id?: number;
+  @ApiProperty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => GameDto)
+  games: Game[];
 }

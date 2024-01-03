@@ -1,5 +1,5 @@
 import { Capture } from "src/capture/entities/capture.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Game {
@@ -9,6 +9,6 @@ export class Game {
   @Column({ nullable: false })
   wording: string;
 
-  @OneToMany(() => Capture, (capture) => capture.game_id)
-  captures: Capture[];
+  @ManyToMany(() => Capture, (capture) => capture.games, { eager: false })
+  capture: Capture[]
 }

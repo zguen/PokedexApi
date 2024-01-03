@@ -22,10 +22,11 @@ export class CaptureService {
     if (!Capture) {
       throw new NotFoundException('Capture not found');
     }
-    if (updateCaptureDto.game_id) {
-      Capture.game_id = updateCaptureDto.game_id;
+
+    if (updateCaptureDto.games) {
+      Capture.games = updateCaptureDto.games;
     }
-    // Sauvegarder les modifications dans la base de données
+       // Sauvegarder les modifications dans la base de données
     await this.captureRepository.save(Capture);
     return Capture;
   }
