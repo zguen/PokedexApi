@@ -61,6 +61,13 @@ export class PokemonController {
     }
   }
 
+  @Get(':pokemonId/games')
+  async getGamesByCapturedPokemon(
+    @Param('pokemonId') pokemonId: string,
+  ): Promise<string[]> {
+    return this.pokemonService.getGamesByCapturedPokemon(+pokemonId);
+  }
+
   @Patch(':id')
   @UseGuards(AuthGuard())
   update(

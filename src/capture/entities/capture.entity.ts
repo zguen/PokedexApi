@@ -15,8 +15,8 @@ export class Capture {
   @ManyToMany(() => Game, (game) => game.capture, { eager: true })
   @JoinTable({
     name: 'comefrom',
-    joinColumn: { name: 'id_game', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'id_capture', referencedColumnName: 'id' }
+    joinColumn: { name: 'id_capture', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'id_game', referencedColumnName: 'id' }
   })
   games: Game[]
 }

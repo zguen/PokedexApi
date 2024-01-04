@@ -69,7 +69,7 @@ export class PokemonService {
   }
 
   async capturePokemon(captureDto: CreateCaptureDto): Promise<void> {
-    const { id_pokemon, id_trainer} = captureDto;
+    const { id_pokemon, id_trainer } = captureDto;
 
     const pokemon = await this.pokemonRepository.findOne({
       where: { pokedexid: id_pokemon },
@@ -115,5 +115,19 @@ export class PokemonService {
     } else {
       throw new NotFoundException(`Trainer with id ${trainerId} not found`);
     }
+  }
+  async getGamesByCapturedPokemon(pokemonId: number): Promise<string[]> {
+    const query = `
+      SELECT game.wording
+      FROM public.pokemon
+      LEFT JOIN public.capture ON pokemon.pokedexid = capture.id_pokemon
+      LEFT JOIN public.comefrom ON capture.id = comefrom.id_capture
+      LEFT JOIN public.game ON comefrom.id_game = game.id
+      WHERE pokemon.pokedexid = $1
+    `;
+
+    const results = await this.pokemonRepository.query(query, [pokemonId]);
+
+    return results.map((result) => result.wording);
   }
 }
