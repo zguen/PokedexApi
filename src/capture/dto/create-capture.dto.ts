@@ -4,6 +4,7 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsPositive,
   ValidateNested,
 } from 'class-validator';
@@ -25,7 +26,8 @@ export class CreateCaptureDto {
 
   @ApiProperty()
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => GameDto)
-  games: Game[];
+  games?: Game[];
 }
