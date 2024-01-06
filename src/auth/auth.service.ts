@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { MailerSenderService } from 'src/mailer-sender/mailer-sender.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class AuthService {
@@ -37,6 +38,7 @@ export class AuthService {
       email,
       password: hashedPassword,
       admin,
+      isverified: false,
     });
 
     try {
@@ -45,7 +47,7 @@ export class AuthService {
 
       const confirmtoken = this.jwtService.sign(
         { userId: createdMaster.id },
-        { expiresIn: '2h' },
+        { expiresIn: '24h' },
       );
 
       master.confirmtoken = confirmtoken;
@@ -90,7 +92,6 @@ export class AuthService {
   }
 
   async confirmEmail(confirmtoken: string): Promise<void> {
-   
     const master = await this.masterRepository.findOneBy({ confirmtoken });
 
     // Vérification du token
@@ -103,6 +104,36 @@ export class AuthService {
     } else {
       // Token invalide ou jeton expiré
       throw new BadRequestException('Token de confirmation invalide');
+    }
+  }
+
+  @Cron('0 21 * * *') // Exécute toutes les 24 heures à minuit
+  async autoDeleteUnverifiedUsers(): Promise<void> {
+    await this.deleteUnverifiedUsers();
+  }
+
+  async deleteUnverifiedUsers(): Promise<void> {
+    try {
+      const unverifiedUsers = await this.masterRepository
+        .createQueryBuilder('master')
+        .where('master.isverified = :isVerified', { isVerified: false })
+        .andWhere('master.confirmtoken IS NOT NULL')
+        .getMany();
+
+      unverifiedUsers.forEach(async (user) => {
+        try {
+          const decodedToken = this.jwtService.verify(user.confirmtoken);
+
+          if (decodedToken.exp < Math.floor(Date.now() / 1000)) {
+            await this.masterRepository.remove(user);
+          }
+        } catch (error) {
+          await this.masterRepository.remove(user);
+        }
+      });
+    } catch (error) {
+      console.error('Error deleting unverified users:', error);
+      throw new InternalServerErrorException();
     }
   }
 }

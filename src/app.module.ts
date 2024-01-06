@@ -21,6 +21,7 @@ import { MailerSenderService } from './mailer-sender/mailer-sender.service';
 import { GameModule } from './game/game.module';
 import { Capture } from './capture/entities/capture.entity';
 import { Game } from './game/entities/game.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { Game } from './game/entities/game.entity';
       },
     }),
     GameModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService, MailerSenderService],
