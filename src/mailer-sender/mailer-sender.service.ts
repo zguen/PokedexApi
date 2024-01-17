@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
@@ -11,10 +11,18 @@ export class MailerSenderService {
   ): Promise<void> {
     const htmlContent = `<p>Cliquez sur le lien ci-dessous pour confirmer votre compte : <a href="${confirmationLink}">Confirmer le compte</a></p>`;
 
-    await this.mailerService.sendMail({
-      to: userEmail,
-      subject: 'Confirmation Email',
-      html: htmlContent,
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: userEmail,
+        subject: 'Confirmation Email',
+        html: htmlContent,
+      });
+    } catch (error) {
+      console.error('Error sending confirmation email:', error);
+      // Gérez l'erreur ici (rejetez ou loggez selon vos besoins)
+      throw new InternalServerErrorException(
+        "Erreur lors de l'envoi du courriel de confirmation",
+      );
+    }
   }
 }
