@@ -107,7 +107,7 @@ export class AuthService {
     }
   }
 
-  @Cron('0 21 * * *') // Exécute toutes les 24 heures à minuit
+  @Cron('0 21 * * *') // Exécute toutes les 24 heures à 21h
   async autoDeleteUnverifiedUsers(): Promise<void> {
     await this.deleteUnverifiedUsers();
   }
