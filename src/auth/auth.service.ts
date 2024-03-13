@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -13,7 +14,10 @@ import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { MailerSenderService } from 'src/mailer-sender/mailer-sender.service';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { ConfigService } from '@nestjs/config';
+import * as jwt from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +26,7 @@ export class AuthService {
     private masterRepository: Repository<Master>,
     private jwtService: JwtService,
     private mailerSenderService: MailerSenderService,
+    private readonly configService: ConfigService,
   ) {}
 
   async register(createAuthDto: CreateAuthDto) {
@@ -82,7 +87,7 @@ export class AuthService {
 
     if (master && (await bcrypt.compare(password, master.password))) {
       const payload = { email };
-      const accessToken = await this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
       return { accessToken };
     } else {
       throw new UnauthorizedException(
@@ -135,5 +140,83 @@ export class AuthService {
       console.error('Error deleting unverified users:', error);
       throw new InternalServerErrorException();
     }
+  }
+
+  @Cron(CronExpression.EVERY_2_HOURS)
+  async deleteResetToken(): Promise<void> {
+    try {
+      const usersWithExpiredResetToken = await this.masterRepository
+        .createQueryBuilder('master')
+        .where('master.resettoken IS NOT NULL')
+        .getMany();
+
+      const jwtSecret = this.configService.get<string>('JWT_SECRET');
+      const currentDate = new Date();
+
+      for (const user of usersWithExpiredResetToken) {
+        try {
+          const decodedToken = jwt.verify(
+            user.resettoken,
+            jwtSecret,
+          ) as JwtPayload;
+
+          if (
+            decodedToken.exp &&
+            decodedToken.exp * 1000 < currentDate.getTime()
+          ) {
+            user.resettoken = null;
+          }
+        } catch (error) {
+          user.resettoken = null;
+        }
+      }
+
+      await this.masterRepository.save(usersWithExpiredResetToken);
+    } catch (error) {
+      console.error('Error deleting expired reset tokens:', error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async generateResetPasswordToken(email: string): Promise<string> {
+    const master = await this.masterRepository.findOneBy({ email });
+
+    if (!master) {
+      throw new NotFoundException('Utilisateur non trouvé');
+    }
+
+    const resetToken = this.jwtService.sign(
+      { userId: master.id },
+      { expiresIn: '1h' },
+    );
+    master.resettoken = resetToken;
+    await this.masterRepository.save(master);
+
+    const confirmationLink = `https://pokedexjunior.fr/resetpassword?token=${resetToken}`;
+
+    await this.mailerSenderService.sendResetPasswordEmail(
+      master.email,
+      confirmationLink,
+    );
+
+    return resetToken;
+  }
+
+  async resetPassword(resettoken: string, newPassword: string): Promise<void> {
+    const master = await this.masterRepository.findOne({
+      where: { resettoken },
+    });
+
+    if (!master) {
+      throw new NotFoundException('Utilisateur non trouvé');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    master.password = hashedPassword;
+
+    master.resettoken = null;
+
+    await this.masterRepository.save(master);
   }
 }

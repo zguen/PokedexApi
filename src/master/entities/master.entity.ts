@@ -20,6 +20,8 @@ export class Master {
   confirmtoken: string;
   @Column({ default: false })
   isverified: boolean;
+  @Column({ nullable: true })
+  resettoken: string;
 
   @OneToMany(() => Trainer, (trainer) => trainer.masters, { eager: true })
   trainers: Trainer[];

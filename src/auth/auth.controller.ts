@@ -6,17 +6,21 @@ import {
   Query,
   BadRequestException,
   InternalServerErrorException,
-  Res
+  Res,
+  NotFoundException,
+  Param
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ResetTokenDto } from './dto/resetTokenDto';
+import { ResetPasswordDto } from './dto/resetPasswordDto';
 
 @Controller('auth')
 @ApiTags('AuthController')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
   create(@Body() createAuthDto: CreateAuthDto) {
@@ -48,8 +52,38 @@ export class AuthController {
         throw error;
       } else {
         // Erreur interne du serveur avec détails spécifiques
-        throw new InternalServerErrorException(`Une erreur est survenue lors de la confirmation de l'e-mail : ${error.message}`);
+        throw new InternalServerErrorException(
+          `Une erreur est survenue lors de la confirmation de l'e-mail : ${error.message}`,
+        );
       }
     }
+  }
+
+  @Post('reset-token')
+  async generateResetPasswordToken(
+    @Body() createResetTokenDto: ResetTokenDto,
+  ): Promise<{ resetToken: string } | { error: string }> {
+    try {
+      const resetToken = await this.authService.generateResetPasswordToken(
+        createResetTokenDto.email,
+      );
+      return { resetToken };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return { error: 'Utilisateur non trouvé' };
+      }
+      return { error: "Une erreur s'est produite" };
+    }
+  }
+
+  @Post('reset-password/:resettoken')
+  async resetPassword(
+    @Param('resettoken') resettoken: string,
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ) {
+    return await this.authService.resetPassword(
+      resettoken,
+      resetPasswordDto.password,
+    );
   }
 }

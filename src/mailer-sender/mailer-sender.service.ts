@@ -10,7 +10,7 @@ export class MailerSenderService {
     confirmationLink: string,
   ): Promise<void> {
     const htmlContent = `<p>Cliquez sur le lien ci-dessous pour confirmer votre compte : <a href="${confirmationLink}">Confirmer le compte</a></p>`;
-    const htmlContent2 =`<p>Inscription d'un nouvel utilisateur ${userEmail}`
+    const htmlContent2 = `<p>Inscription d'un nouvel utilisateur ${userEmail}`;
     try {
       await this.mailerService.sendMail({
         to: userEmail,
@@ -21,11 +21,28 @@ export class MailerSenderService {
       await this.mailerService.sendMail({
         to: 'admin@pokedexjunior.fr',
         subject: 'Nouvelle Inscription',
-        html: htmlContent2
-      })
+        html: htmlContent2,
+      });
     } catch (error) {
       console.error('Error sending confirmation email:', error);
-      // Gérez l'erreur ici (rejetez ou loggez selon vos besoins)
+      throw new InternalServerErrorException(
+        "Erreur lors de l'envoi du courriel de confirmation",
+      );
+    }
+  }
+  async sendResetPasswordEmail(
+    userEmail: string,
+    confirmationLink: string,
+  ): Promise<void> {
+    const htmlContent = `<p>Cliquez sur le lien ci-dessous pour modifier votre mot de passe : <a href="${confirmationLink}">Modifier le mot de passe</a></p>`;
+    try {
+      await this.mailerService.sendMail({
+        to: userEmail,
+        subject: 'Modification du mot de passe',
+        html: htmlContent,
+      });
+    } catch (error) {
+      console.error('Error sending confirmation email:', error);
       throw new InternalServerErrorException(
         "Erreur lors de l'envoi du courriel de confirmation",
       );
