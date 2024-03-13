@@ -178,7 +178,7 @@ export class AuthService {
     }
   }
 
-  async generateResetPasswordToken(email: string): Promise<string> {
+  async generateResetPasswordToken(email: string): Promise<{ resetToken: string; master: Master; }> {
     const master = await this.masterRepository.findOneBy({ email });
 
     if (!master) {
@@ -199,7 +199,7 @@ export class AuthService {
       confirmationLink,
     );
 
-    return resetToken;
+    return { resetToken, master };
   }
 
   async resetPassword(resettoken: string, newPassword: string): Promise<void> {

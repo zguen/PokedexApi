@@ -64,10 +64,10 @@ export class AuthController {
     @Body() createResetTokenDto: ResetTokenDto,
   ): Promise<{ resetToken: string } | { error: string }> {
     try {
-      const resetToken = await this.authService.generateResetPasswordToken(
+      const result = await this.authService.generateResetPasswordToken(
         createResetTokenDto.email,
       );
-      return { resetToken };
+      return result;
     } catch (error) {
       if (error instanceof NotFoundException) {
         return { error: 'Utilisateur non trouvé' };
