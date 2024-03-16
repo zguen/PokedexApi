@@ -8,7 +8,8 @@ import {
   InternalServerErrorException,
   Res,
   NotFoundException,
-  Param
+  Param,
+  Patch
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -76,14 +77,26 @@ export class AuthController {
     }
   }
 
-  @Post('reset-password/:resettoken')
+  @Patch(':resettoken')
   async resetPassword(
     @Param('resettoken') resettoken: string,
     @Body() resetPasswordDto: ResetPasswordDto,
-  ) {
-    return await this.authService.resetPassword(
-      resettoken,
-      resetPasswordDto.password,
-    );
+  ): Promise<{ success: boolean; message?: string }> {
+    try {
+      await this.authService.resetPassword(
+        resettoken,
+        resetPasswordDto.password,
+      );
+      return {
+        success: true,
+        message: 'Mot de passe réinitialisé avec succès.',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message:
+          "Une erreur s'est produite lors de la réinitialisation du mot de passe.",
+      };
+    }
   }
 }
